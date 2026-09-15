@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import EnVivo from '@/components/EnVivo';
 
 // Sección de un caso: etiqueta, título, problema, qué construí, decisiones, números, stack y enlaces.
 export default function Caso({ caso }) {
@@ -62,6 +63,20 @@ export default function Caso({ caso }) {
           </div>
         )}
 
+        {id === 'droptrend' && <EnVivo />}
+
+        {enlaces.some((e) => e.destacado) && (
+          <div className="destacados entrada">
+            {enlaces.filter((e) => e.destacado).map((e) => (
+              <a key={e.texto} className="boton-demo" href={e.href} target="_blank" rel="noopener noreferrer">
+                <span className="boton-demo-punto" aria-hidden="true"></span>
+                {e.texto}
+                <span className="boton-demo-sub">datos ficticios · sin registro</span>
+              </a>
+            ))}
+          </div>
+        )}
+
         {galeria && (
           <div className="galeria entrada">
             {galeria.map((g) => (
@@ -77,7 +92,7 @@ export default function Caso({ caso }) {
         </p>
 
         <div className="enlaces entrada">
-          {enlaces.map((e) =>
+          {enlaces.filter((e) => !e.destacado).map((e) =>
             e.todo ? (
               <a key={e.texto} className="enlace" href={e.href} data-todo={e.todo}>
                 {e.texto}

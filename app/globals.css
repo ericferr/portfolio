@@ -424,3 +424,27 @@ main {
     padding: 0.6rem 0.95rem;
   }
 }
+
+/* Fila en vivo (caso DropTrend) */
+.en-vivo { margin-top: 1.25rem; }
+.en-vivo-cabecera { display: flex; align-items: center; gap: 0.6rem; font-size: 0.78rem; letter-spacing: 0.08em; color: var(--acento); }
+.en-vivo-desde { color: var(--apagado); letter-spacing: 0; text-transform: none; font-family: var(--fuente-cuerpo), sans-serif; font-size: 0.8rem; }
+.en-vivo-punto { width: 8px; height: 8px; border-radius: 50%; background: var(--acento); box-shadow: 0 0 0 0 var(--acento); animation: latido 2s infinite; }
+@keyframes latido { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--acento) 60%, transparent); } 70% { box-shadow: 0 0 0 10px transparent; } 100% { box-shadow: 0 0 0 0 transparent; } }
+.en-vivo-numeros { margin-top: 0.75rem; border-top: 0; }
+.en-vivo-numeros .numero-valor { font-size: 1.35rem; }
+@media (prefers-reduced-motion: reduce) { .en-vivo-punto { animation: none; } }
+
+/* Botón destacado de la demo (caso joyería) */
+.destacados { margin: 1.75rem 0 0.5rem; }
+.boton-demo {
+  display: inline-flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;
+  padding: 0.95rem 1.4rem; border-radius: 12px; text-decoration: none;
+  background: var(--acento); color: #0b0a07; font-weight: 700; font-size: 1.05rem;
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--acento) 60%, transparent), 0 10px 30px -12px var(--acento);
+  transition: transform .15s ease, box-shadow .2s ease;
+}
+.boton-demo:hover { transform: translateY(-2px); box-shadow: 0 0 0 1px var(--acento), 0 16px 36px -12px var(--acento); text-decoration: none; }
+.boton-demo:focus-visible { outline: 2px solid var(--texto); outline-offset: 3px; }
+.boton-demo-punto { width: 9px; height: 9px; border-radius: 50%; background: #0b0a07; opacity: .8; }
+.boton-demo-sub { font-weight: 500; font-size: 0.8rem; opacity: .75; }
