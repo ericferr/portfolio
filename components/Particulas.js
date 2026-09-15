@@ -81,6 +81,31 @@ export default function Particulas() {
     const puntos = new THREE.Points(geometria, material);
     grupo.add(puntos);
 
+    // Copia objetivo -> posición/color sin interpolar y pinta un cuadro. Es
+    // el único "avance" que hay con prefers-reduced-motion: reduce, en vez
+    // del bucle a 60 fps.
+    function renderizarUnaVez() {
+      const pos = geometria.attributes.position.array;
+      const col = geometria.attributes.color.array;
+      pos.set(objetivo);
+      col.set(coloresObjetivo);
+      geometria.attributes.position.needsUpdate = true;
+      geometria.attributes.color.needsUpdate = true;
+      renderer.render(escena, camara);
+    }
+
+    // Cuántos puntos dibuja el draw range según el ancho actual, y el DPR
+    // acorde. No recrea la nube: solo ajusta cuánto de ella se ve/renderiza.
+    function ajustarPorAncho(esMovil) {
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, esMovil ? 1.5 : 2));
+      geometria.setDrawRange(0, esMovil ? Math.min(N, 3000) : N);
+      if (reducirMovimiento) renderizarUnaVez();
+    }
+    ajustarPorAncho(movil);
+    const mqMovil = window.matchMedia('(max-width: 760px)');
+    const onCambioMovil = (ev) => ajustarPorAncho(ev.matches);
+    mqMovil.addEventListener('change', onCambioMovil);
+
     // Formas fijas, calculadas una sola vez.
     const formas = {
       anillo: formaAnillo(N),
@@ -119,6 +144,8 @@ export default function Particulas() {
         else forma = 'onda'; // todavía no cargó: se queda en la onda
       }
       pintar(forma);
+      // Sin animación no hay bucle que la aplique solo: se pinta el cuadro ya.
+      if (reducirMovimiento) renderizarUnaVez();
     }
 
     // Las formas rasterizadas dependen de recursos externos (fuente e imagen).
@@ -126,7 +153,9 @@ export default function Particulas() {
     const familiaTitulo =
       getComputedStyle(document.documentElement).getPropertyValue('--fuente-display').trim() || 'Sora';
     const fuenteTitulo = `800 190px ${familiaTitulo}, sans-serif`;
+    let cancelado = false;
     const cargarEF = () => {
+      if (cancelado) return;
       formas.ef = formaTexto('EF', fuenteTitulo, N);
       if (seccion === 'hero' && CICLO_HERO[estadoHero] === 'ef') aplicarForma('ef');
     };
@@ -137,6 +166,7 @@ export default function Particulas() {
     }
     const img = new Image();
     img.onload = () => {
+      if (cancelado) return;
       formas.logo = formaImagen(img, N);
       if (seccion === 'droptrend') aplicarForma('logo');
     };
@@ -256,7 +286,9 @@ export default function Particulas() {
 
       renderer.render(escena, camara);
     }
-    rafId = requestAnimationFrame(cuadro);
+    // Con movimiento reducido no hay bucle: cada cambio de forma/sección ya
+    // se pintó solo con renderizarUnaVez().
+    if (!reducirMovimiento) rafId = requestAnimationFrame(cuadro);
 
     // Gancho de depuración en desarrollo: permite avanzar frames a mano cuando la pestaña no dispara RAF.
     if (process.env.NODE_ENV !== 'production') {
@@ -273,11 +305,14 @@ export default function Particulas() {
     }
 
     return () => {
+      cancelado = true;
+      img.onload = null;
       cancelAnimationFrame(rafId);
       observador.disconnect();
       window.removeEventListener('mousemove', onMouse);
       window.removeEventListener('resize', ubicar);
       document.removeEventListener('visibilitychange', onVisibilidad);
+      mqMovil.removeEventListener('change', onCambioMovil);
       geometria.dispose();
       material.dispose();
       renderer.dispose();
