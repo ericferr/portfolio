@@ -16,9 +16,13 @@ export default async function EnVivo({ lang = 'es' }) {
 
   let d = null;
   try {
-    const r = await fetch('https://droptrend.app/api/estado', { next: { revalidate: 900 } });
+    const r = await fetch('https://droptrend.app/api/estado', {
+      next: { revalidate: 900 },
+      signal: AbortSignal.timeout(5000),
+    });
     if (r.ok) d = await r.json();
   } catch {
+    // Incluye el AbortError del timeout: sin datos, no se muestra la fila.
     d = null;
   }
   if (!d || !d.catalogo) return null;
