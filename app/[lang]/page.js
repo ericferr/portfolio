@@ -1,12 +1,20 @@
 import dynamic from 'next/dynamic';
 import Caso from '@/components/Caso';
 import Animaciones from '@/components/Animaciones';
-import { hero, casos, sobreMi, contacto } from '@/lib/contenido';
+import SelectorIdioma from '@/components/SelectorIdioma';
+import { contenido } from '@/lib/contenido';
 
 // El canvas se carga solo en el cliente y después del texto: si WebGL falla, la página igual se lee.
 const Particulas = dynamic(() => import('@/components/Particulas'), { ssr: false });
 
-export default function Pagina() {
+export function generateStaticParams() {
+  return [{ lang: 'es' }, { lang: 'en' }];
+}
+
+export default async function Pagina({ params }) {
+  const { lang } = await params;
+  const { hero, casos, sobreMi, contacto, ui } = contenido[lang];
+
   return (
     <>
       <Particulas />
@@ -18,13 +26,16 @@ export default function Pagina() {
         </a>
         <ul>
           <li>
-            <a href="#droptrend">Trabajo</a>
+            <a href="#droptrend">{ui.nav.trabajo}</a>
           </li>
           <li>
-            <a href="#sobre-mi">Sobre mí</a>
+            <a href="#sobre-mi">{ui.nav.sobreMi}</a>
           </li>
           <li>
-            <a href="#contacto">Contacto</a>
+            <a href="#contacto">{ui.nav.contacto}</a>
+          </li>
+          <li>
+            <SelectorIdioma lang={lang} />
           </li>
         </ul>
       </nav>
@@ -54,12 +65,12 @@ export default function Pagina() {
         </section>
 
         {casos.map((c) => (
-          <Caso key={c.id} caso={c} />
+          <Caso key={c.id} caso={c} lang={lang} />
         ))}
 
         <section id="sobre-mi" className="seccion sobre" data-forma="sobre">
           <div className="seccion-interior">
-            <h2 className="entrada">Sobre mí</h2>
+            <h2 className="entrada">{ui.sobreMiTitulo}</h2>
             <div className="bloque">
               {sobreMi.parrafos.map((p) => (
                 <p key={p} className="entrada">
@@ -72,7 +83,7 @@ export default function Pagina() {
 
         <section id="contacto" className="seccion" data-forma="contacto">
           <div className="seccion-interior">
-            <h2 className="entrada">Contacto</h2>
+            <h2 className="entrada">{ui.contactoTitulo}</h2>
             <div className="bloque entrada">
               <a className="contacto-email" href={`mailto:${contacto.email}`}>
                 {contacto.email}
@@ -97,7 +108,7 @@ export default function Pagina() {
 
       <footer className="pie">
         <span>{hero.nombre} · Posadas, Argentina (GMT-3)</span>
-        <span>Next.js · Three.js</span>
+        <span>{ui.pieStack}</span>
       </footer>
     </>
   );

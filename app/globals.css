@@ -131,6 +131,34 @@ p {
   color: var(--texto);
 }
 
+.selector-idioma {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--fuente-mono), monospace;
+  font-size: 0.8rem;
+  color: var(--apagado);
+}
+
+.selector-idioma button {
+  background: none;
+  border: none;
+  padding: 0;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  transition: color 0.2s;
+}
+
+.selector-idioma button:hover {
+  color: var(--texto);
+}
+
+.selector-idioma button.activo {
+  color: var(--texto);
+  font-weight: 600;
+}
+
 /* Contenido */
 main {
   position: relative;
