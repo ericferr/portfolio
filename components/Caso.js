@@ -1,8 +1,10 @@
 import Image from 'next/image';
 import EnVivo from '@/components/EnVivo';
+import { contenido } from '@/lib/contenido';
 
 // Sección de un caso: etiqueta, título, problema, qué construí, decisiones, números, stack y enlaces.
-export default function Caso({ caso }) {
+export default function Caso({ caso, lang = 'es' }) {
+  const ui = contenido[lang].ui;
   const {
     id,
     acento,
@@ -30,12 +32,12 @@ export default function Caso({ caso }) {
         {subtitulo && <p className="subtitulo entrada">{subtitulo}</p>}
 
         <div className="bloque entrada">
-          <h3>{problemaTitulo || 'El problema'}</h3>
+          <h3>{problemaTitulo || ui.caso.elProblema}</h3>
           <p>{problema}</p>
         </div>
 
         <div className="bloque entrada">
-          <h3>{construiTitulo || 'Qué construí'}</h3>
+          <h3>{construiTitulo || ui.caso.queConstrui}</h3>
           <p>{construi}</p>
         </div>
 
@@ -63,7 +65,7 @@ export default function Caso({ caso }) {
           </div>
         )}
 
-        {id === 'droptrend' && <EnVivo />}
+        {id === 'droptrend' && <EnVivo lang={lang} />}
 
         {enlaces.some((e) => e.destacado) && (
           <div className="destacados entrada">
@@ -71,7 +73,7 @@ export default function Caso({ caso }) {
               <a key={e.texto} className="boton-demo" href={e.href} target="_blank" rel="noopener noreferrer">
                 <span className="boton-demo-punto" aria-hidden="true"></span>
                 {e.texto}
-                <span className="boton-demo-sub">datos ficticios · sin registro</span>
+                <span className="boton-demo-sub">{ui.demoSub}</span>
               </a>
             ))}
           </div>
@@ -88,7 +90,7 @@ export default function Caso({ caso }) {
         )}
 
         <p className="stack entrada">
-          <strong>Stack.</strong> {stack}
+          <strong>{ui.caso.stack}</strong> {stack}
         </p>
 
         <div className="enlaces entrada">

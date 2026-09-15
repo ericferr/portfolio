@@ -1,16 +1,19 @@
 // Fila "en vivo" con los totales públicos de DropTrend. Se lee en el servidor
 // (sin CORS) y se refresca cada 15 minutos; si el endpoint falla, no se muestra
 // nada antes que mostrar un número inventado.
-const fmt = new Intl.NumberFormat('es-AR');
+import { contenido } from '@/lib/contenido';
 
-function haceCuanto(iso) {
+function haceCuanto(iso, t) {
   const horas = Math.max(0, Math.round((Date.now() - new Date(iso).getTime()) / 3600000));
-  if (horas < 1) return 'hace menos de una hora';
-  if (horas < 48) return `hace ${horas} h`;
-  return `hace ${Math.round(horas / 24)} días`;
+  if (horas < 1) return t.haceMenosUnaHora;
+  if (horas < 48) return t.haceHoras(horas);
+  return t.haceDias(Math.round(horas / 24));
 }
 
-export default async function EnVivo() {
+export default async function EnVivo({ lang = 'es' }) {
+  const t = contenido[lang].ui.enVivo;
+  const fmt = new Intl.NumberFormat(lang === 'en' ? 'en-US' : 'es-AR');
+
   let d = null;
   try {
     const r = await fetch('https://droptrend.app/api/estado', { next: { revalidate: 900 } });
@@ -21,19 +24,19 @@ export default async function EnVivo() {
   if (!d || !d.catalogo) return null;
 
   const filas = [
-    { valor: fmt.format(d.tendencias), texto: 'productos con movimiento' },
-    { valor: fmt.format(d.unidades), texto: 'unidades detectadas hoy' },
-    { valor: fmt.format(d.nuevos), texto: 'productos nuevos' },
-    { valor: fmt.format(d.catalogo), texto: 'productos analizados' },
-    { valor: d.paises, texto: 'países' },
+    { valor: fmt.format(d.tendencias), texto: t.tendencias },
+    { valor: fmt.format(d.unidades), texto: t.unidades },
+    { valor: fmt.format(d.nuevos), texto: t.nuevos },
+    { valor: fmt.format(d.catalogo), texto: t.catalogo },
+    { valor: d.paises, texto: t.paises },
   ];
 
   return (
     <div className="en-vivo entrada" aria-label="Datos en vivo de DropTrend">
       <div className="en-vivo-cabecera">
         <span className="en-vivo-punto" aria-hidden="true"></span>
-        <span className="mono">EN VIVO</span>
-        <span className="en-vivo-desde">datos reales de droptrend.app · actualizado {haceCuanto(d.actualizado)}</span>
+        <span className="mono">{t.etiqueta}</span>
+        <span className="en-vivo-desde">{t.fuente(haceCuanto(d.actualizado, t))}</span>
       </div>
       <div className="numeros en-vivo-numeros">
         {filas.map((n) => (
