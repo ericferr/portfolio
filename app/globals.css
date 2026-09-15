@@ -448,3 +448,7 @@ main {
 .boton-demo:focus-visible { outline: 2px solid var(--texto); outline-offset: 3px; }
 .boton-demo-punto { width: 9px; height: 9px; border-radius: 50%; background: #0b0a07; opacity: .8; }
 .boton-demo-sub { font-weight: 500; font-size: 0.8rem; opacity: .75; }
+
+/* El título va primero y más grande; el puesto, debajo */
+.hero-rol { font-family: var(--fuente-display), sans-serif; font-weight: 600; font-size: clamp(1.4rem, 2.6vw, 2rem); color: var(--texto); letter-spacing: -0.01em; margin-top: 0.5rem; }
+.hero-rol-sec { color: var(--apagado); font-size: 1.05rem; margin-top: 0.15rem; }

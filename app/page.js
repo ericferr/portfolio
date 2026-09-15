@@ -34,6 +34,7 @@ export default function Pagina() {
           <div className="seccion-interior">
             <h1 className="entrada">{hero.nombre}</h1>
             <p className="hero-rol entrada">{hero.rol}</p>
+            <p className="hero-rol-sec entrada">{hero.rolSecundario}</p>
             <p className="hero-linea entrada">{hero.linea}</p>
             <div className="botones entrada">
               {hero.botones.map((b) => (
