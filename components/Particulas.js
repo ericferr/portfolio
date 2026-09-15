@@ -231,14 +231,27 @@ export default function Particulas() {
       geometria.attributes.position.needsUpdate = true;
       geometria.attributes.color.needsUpdate = true;
 
-      // Giro lento y seguimiento del mouse
+      // La rotación tiende a un objetivo, nunca acumula: con el mouse al
+      // centro la forma queda de frente. Las formas planas (EF, logo) solo
+      // se balancean; las 3D giran despacio para que se lea el volumen.
+      const plana = forma === 'ef' || forma === 'logo';
       if (!reducirMovimiento) {
-        const objY = tiempo * 0.12 + mouse.x * 0.35;
-        const objX = (forma === 'onda' ? 0.45 : 0.1) + mouse.y * 0.2;
-        grupo.rotation.y += (objY - grupo.rotation.y) * 0.04;
-        grupo.rotation.x += (objX - grupo.rotation.x) * 0.04;
+        let objY;
+        let objX;
+        if (plana) {
+          objY = Math.sin(tiempo * 0.5) * 0.10 + mouse.x * 0.28;
+          objX = mouse.y * 0.14;
+        } else if (forma === 'onda') {
+          objY = Math.sin(tiempo * 0.3) * 0.15 + mouse.x * 0.3;
+          objX = 0.45 + mouse.y * 0.15;
+        } else {
+          objY = tiempo * 0.22 + mouse.x * 0.3;
+          objX = 0.12 + mouse.y * 0.18;
+        }
+        grupo.rotation.y += (objY - grupo.rotation.y) * 0.05;
+        grupo.rotation.x += (objX - grupo.rotation.x) * 0.05;
       } else {
-        grupo.rotation.set(forma === 'onda' ? 0.45 : 0.1, 0.4, 0);
+        grupo.rotation.set(forma === 'onda' ? 0.45 : 0, 0, 0);
       }
 
       renderer.render(escena, camara);

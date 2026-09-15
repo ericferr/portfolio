@@ -9,8 +9,8 @@ const descripcion =
   'Construyo productos que están en producción: un SaaS que opera en 12 países, un sistema de gestión que reemplazó el papel en un comercio, y tiendas que venden.';
 
 export const metadata = {
-  // TODO: cambiar por el dominio definitivo al desplegar.
-  metadataBase: new URL('https://portfolio-eric-ferreira.vercel.app'),
+  : cambiar por el dominio definitivo al desplegar.
+  metadataBase: new URL('https://eric-ferreira-dev.vercel.app'),
   title: 'Eric Ferreira — Desarrollador full-stack',
   description: descripcion,
   openGraph: {
