@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { elegirIdioma } from '@/lib/idioma';
 
 // Redirige "/" según la cookie de preferencia o el Accept-Language del navegador.
 export function middleware(request) {
@@ -8,8 +9,7 @@ export function middleware(request) {
   if (cookieLang === 'es' || cookieLang === 'en') {
     destino = cookieLang;
   } else {
-    const aceptado = request.headers.get('accept-language') || '';
-    destino = aceptado.startsWith('es') ? 'es' : 'en';
+    destino = elegirIdioma(request.headers.get('accept-language'));
   }
 
   const url = request.nextUrl.clone();
