@@ -7,13 +7,13 @@ const mono = JetBrains_Mono({ subsets: ['latin'], weight: ['400', '500'], variab
 
 const textos = {
   es: {
-    title: 'Eric Ferreira — Desarrollador full-stack',
+    title: 'Eric Ferreira — Analista de Sistemas · Desarrollador full-stack',
     description:
       'Construyo productos que están en producción: un SaaS que opera en 12 países, un sistema de gestión que reemplazó el papel en un comercio, y tiendas que venden.',
     locale: 'es_AR',
   },
   en: {
-    title: 'Eric Ferreira — Full-stack Developer',
+    title: 'Eric Ferreira — Systems Analyst · Full-stack Developer',
     description:
       'I build products that are in production: a SaaS operating in 12 countries, a management system that replaced paper in a retail store, and stores that sell.',
     locale: 'en_US',
