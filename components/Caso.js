@@ -19,7 +19,7 @@ export default function Caso({ caso, lang = 'es' }) {
     decisiones,
     numeros,
     stack,
-    enlaces,
+    enlaces = [],
     nota,
     galeria,
   } = caso;
@@ -89,9 +89,11 @@ export default function Caso({ caso, lang = 'es' }) {
           </div>
         )}
 
-        <p className="stack entrada">
-          <strong>{ui.caso.stack}</strong> {stack}
-        </p>
+        {stack && (
+          <p className="stack entrada">
+            <strong>{ui.caso.stack}</strong> {stack}
+          </p>
+        )}
 
         <div className="enlaces entrada">
           {enlaces.filter((e) => !e.destacado).map((e) =>
