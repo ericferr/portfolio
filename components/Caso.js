@@ -22,6 +22,7 @@ export default function Caso({ caso, lang = 'es' }) {
     enlaces = [],
     nota,
     galeria,
+    capturas,
   } = caso;
 
   return (
@@ -87,6 +88,19 @@ export default function Caso({ caso, lang = 'es' }) {
               </a>
             ))}
           </div>
+        )}
+
+        {capturas && (
+          <details className="ver-sistema entrada">
+            <summary className="boton-demo">{ui.caso.verPantallas}</summary>
+            <div className="galeria">
+              {capturas.map((g) => (
+                <a key={g.src} href={g.src} target="_blank" rel="noopener noreferrer">
+                  <Image src={g.src} alt={g.alt} width={1600} height={1000} sizes="(max-width: 760px) 90vw, 480px" />
+                </a>
+              ))}
+            </div>
+          </details>
         )}
 
         {stack && (
